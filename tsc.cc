@@ -184,12 +184,12 @@ IReply Client::processCommand(std::string& input)
     if(status.status()==""){
         ReplyStatus testStatus;
         
-        tinysns::FollowOp to_follow;
+        tinysns::FollowOp to_follow_test;
           
-        to_follow.set_username(username);
-        to_follow.set_follow("TEST_USERNAME");
+        to_follow_test.set_username(username);
+        to_follow_test.set_follow("TEST_USERNAME");
         
-        stub_->Follow(&command_context, to_unfollow, &testStatus);
+        stub_->Follow(&command_context, to_follow_test, &testStatus);
         
         int attempts = 0;
         
@@ -197,7 +197,7 @@ IReply Client::processCommand(std::string& input)
             std::cout << "Waiting";
             connectTo();
             std::this_thread::sleep_for (std::chrono::seconds(1));
-            stub_->Follow(&command_context, to_unfollow, &testStatus);
+            stub_->Follow(&command_context, to_follow_test, &testStatus);
             attempts+=1;
         }
         
