@@ -197,7 +197,7 @@ IReply Client::processCommand(std::string& input)
             std::cout << "Waiting";
             connectTo();
             std::this_thread::sleep_for (std::chrono::seconds(1));
-            stub_->Follow(&command_context, to_follow_test, &testStatus);
+            //stub_->Follow(&command_context, to_follow_test, &testStatus);
         //    attempts+=1;
         //}
         
