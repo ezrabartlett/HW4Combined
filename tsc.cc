@@ -7,6 +7,7 @@
 #include <grpc++/grpc++.h>
 #include "client.h"
 #include "tinysns.grpc.pb.h"
+//#include "google/protobuf/empty.proto"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -18,6 +19,7 @@ using tinysns::User;
 using tinysns::ReplyStatus;
 using tinysns::Posting;
 using tinysns::NewPosting;
+using tinysns::ServerInfo;
 using tinysns::TinySNS;
 
 
@@ -82,11 +84,29 @@ int Client::connectTo()
     // Please refer to gRpc tutorial how to create a stub.
 	// ------------------------------------------------------------
 
+    
+    // Router stub
+    //***** Uncomment *****
+    //std::unique_ptr<TinySNS::Stub> tempStub_;
+    //tempStub_ = TinySNS::NewStub(grpc::CreateChannel(hostname + ":" + port, grpc::InsecureChannelCredentials()));
+    
+    // ***** Delete *****
     stub_ = TinySNS::NewStub(grpc::CreateChannel(hostname + ":" + port, grpc::InsecureChannelCredentials()));
 
     ClientContext client_context;
 
-    User current_user; 
+    User current_user;
+    
+    // get master info
+    ServerInfo masterServer;
+    
+    //****** Uncomment ******
+    //Status getMasterStatus = tempStub_->getMaster(&client_context, current_user, &masterServer);
+    
+    //Use new masterInfo to connect to a new stub
+    //****** Uncomment ******
+    //stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
+    
     current_user.set_username(username);
     
     ReplyStatus login_status;
@@ -136,10 +156,15 @@ IReply Client::processCommand(std::string& input)
         
         to_follow.set_username(username);
         to_follow.set_follow(target_name);
-        
+        try {
+           command_reply.grpc_status = stub_->Follow(&command_context, to_follow, &status);
+        } catch (const std::exception& e) {
+            std::cout << "FFFFAAAAIIIILLLLLED";
+            //logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+          //return;
+        }
         std::cout << "follow command" << input_copy;
-        
-        command_reply.grpc_status = stub_->Follow(&command_context, to_follow, &status);
+    
     } else if(strncmp(input_copy, "UNFOLLOW", 8)==0){
         const char* target_name = input.substr(9).c_str();
         
@@ -150,9 +175,11 @@ IReply Client::processCommand(std::string& input)
         
         std::cout << (char*)"unfollow command";
         
-        command_reply.grpc_status = stub_->Unfollow(&command_context, to_unfollow, &status);
+        command_reply.grpc_status = stub_->Unfollow(&command_context, to_unfollow, &status)
     } else if(strncmp(input_copy, "LIST", 4)==0){}
-
+    
+    //std::cout << command_reply.grpc_status << "_Status";
+    
     // Convert to comm iStatus message before returning
     if(status.status() == "0")
         command_reply.comm_status = SUCCESS;
@@ -170,7 +197,7 @@ IReply Client::processCommand(std::string& input)
         command_reply.comm_status = SUCCESS;
     
     
-    std::cout << status.status();
+    std::cout << status.status() << "commStatus";
     
     // ------------------------------------------------------------
 	// GUIDE 2:
