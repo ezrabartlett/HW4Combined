@@ -196,7 +196,7 @@ IReply Client::processCommand(std::string& input)
     
     std::cout << status.status() << "commStatus";
     
-    if (status.status()==NULL){
+    if (status.status()==""){
         std::cout << "NULLLLLL";
     }
     
