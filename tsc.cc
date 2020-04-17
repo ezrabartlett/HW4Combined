@@ -182,10 +182,29 @@ IReply Client::processCommand(std::string& input)
     
     //std::cout << command_reply.grpc_status << "_Status";
     if(status.status()==""){
-        connectTo();
-        std::this_thread::sleep_for (std::chrono::seconds(1));
-        std::cout << "Waiting";
-        command_reply.comm_status = FAILURE_UNKNOWN;
+        ReplyStatus testStatus;
+        
+        tinysns::FollowOp to_follow;
+          
+        to_follow.set_username(username);
+        to_follow.set_follow("TEST_USERNAME");
+        
+        stub_->FOLLOW(&command_context, to_unfollow, &testStatus);
+        
+        int attempts = 0;
+        
+        while(status.status() == "" && attempts <= 5){
+            std::cout << "Waiting";
+            connectTo();
+            std::this_thread::sleep_for (std::chrono::seconds(1));
+            stub_->FOLLOW(&command_context, to_unfollow, &testStatus);
+            attempts+=1;
+        }
+        
+        if(status.status()== ""){
+            std::cout << "Failed to reconnect after 5 attempts.\n";
+            command_reply.comm_status = FAILURE_UNKNOWN;
+        }
     } else if(status.status() == "0")
         command_reply.comm_status = SUCCESS;
     else if(status.status() == "1")
