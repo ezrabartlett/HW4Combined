@@ -99,7 +99,7 @@ int Client::connectTo()
     
     NoMessage emptyMessage;
     
-    Status getMasterStatus = tempStub_->GetMaster(&client_context, emptyMessage, &masterServer);
+    Status masterServerInfo = tempStub_->GetMaster(&client_context, emptyMessage, &masterServer);
     
     //Use new masterInfo to connect to a new stub
     stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
@@ -195,6 +195,10 @@ IReply Client::processCommand(std::string& input)
     
     
     std::cout << status.status() << "commStatus";
+    
+    if (status.status()==NULL){
+        std::cout << "NULLLLLL";
+    }
     
     // ------------------------------------------------------------
 	// GUIDE 2:
