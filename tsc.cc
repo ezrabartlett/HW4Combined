@@ -21,6 +21,7 @@ using tinysns::Posting;
 using tinysns::NewPosting;
 using tinysns::ServerInfo;
 using tinysns::TinySNS;
+using tinysns::NoMessage;
 
 
 class Client : public IClient
@@ -86,12 +87,8 @@ int Client::connectTo()
 
     
     // Router stub
-    //***** Uncomment *****
-    //std::unique_ptr<TinySNS::Stub> tempStub_;
-    //tempStub_ = TinySNS::NewStub(grpc::CreateChannel(hostname + ":" + port, grpc::InsecureChannelCredentials()));
-    
-    // ***** Delete *****
-    stub_ = TinySNS::NewStub(grpc::CreateChannel(hostname + ":" + port, grpc::InsecureChannelCredentials()));
+    std::unique_ptr<TinySNS::Stub> tempStub_;
+    tempStub_ = TinySNS::NewStub(grpc::CreateChannel(hostname + ":" + port, grpc::InsecureChannelCredentials()));
 
     ClientContext client_context;
 
@@ -100,12 +97,12 @@ int Client::connectTo()
     // get master info
     ServerInfo masterServer;
     
-    //****** Uncomment ******
-    //Status getMasterStatus = tempStub_->getMaster(&client_context, current_user, &masterServer);
+    NoMessage emptyMessage;
+    
+    Status getMasterStatus = tempStub_->getMaster(&client_context, emptyMessage, &masterServer);
     
     //Use new masterInfo to connect to a new stub
-    //****** Uncomment ******
-    //stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
+    stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
     
     current_user.set_username(username);
     
