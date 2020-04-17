@@ -99,10 +99,12 @@ int Client::connectTo()
     
     NoMessage emptyMessage;
     
-    Status masterServerInfo = tempStub_->GetMaster(&client_context, emptyMessage, &masterServer);
+    stub_ = TinySNS::NewStub(grpc::CreateChannel(localhost + ":" + port, grpc::InsecureChannelCredentials()));
+    
+    //Status masterServerInfo = tempStub_->GetMaster(&client_context, emptyMessage, &masterServer);
     
     //Use new masterInfo to connect to a new stub
-    stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
+    //stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
     
     current_user.set_username(username);
     
