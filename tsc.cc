@@ -99,7 +99,7 @@ int Client::connectTo()
     
     NoMessage emptyMessage;
     
-    Status getMasterStatus = tempStub_->getMaster(&client_context, emptyMessage, &masterServer);
+    Status getMasterStatus = tempStub_->GetMaster(&client_context, emptyMessage, &masterServer);
     
     //Use new masterInfo to connect to a new stub
     stub_ = TinySNS::NewStub(grpc::CreateChannel(masterServer.ip() + ":" + masterServer.port(), grpc::InsecureChannelCredentials()));
@@ -172,7 +172,7 @@ IReply Client::processCommand(std::string& input)
         
         std::cout << (char*)"unfollow command";
         
-        command_reply.grpc_status = stub_->Unfollow(&command_context, to_unfollow, &status)
+        command_reply.grpc_status = stub_->Unfollow(&command_context, to_unfollow, &status);
     } else if(strncmp(input_copy, "LIST", 4)==0){}
     
     //std::cout << command_reply.grpc_status << "_Status";
