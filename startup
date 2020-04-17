@@ -1,0 +1,15 @@
+#!/bin/bash
+# R for routing server, M for master
+mode="M"
+# Ip address of routing server
+rHost="10.0.2.6"
+# Ip address of master server
+host="10.0.2.7"
+#Port of master server
+port="8080"
+if [ $mode == "R" ]
+then
+    ./tsd -r $rHost -m $mode &
+else
+    ./tsd -h $host -p $port -m $mode -r $rHost &
+fi

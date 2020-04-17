@@ -1,0 +1,8 @@
+Routing server:
+set mode = "R" in startup. Enter in hostname for routing server.
+Run the script.
+
+Master server:
+set mode = "M" in startup. Fill in rHost with address of routing server.
+Fill in host with ip of the master you are starting, and port with the port.
+This will start both the master and slave.
