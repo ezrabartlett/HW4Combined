@@ -7,6 +7,8 @@
 #include <grpc++/grpc++.h>
 #include "client.h"
 #include "tinysns.grpc.pb.h"
+#include <thread>         // std::this_thread::sleep_for
+#include <chrono>
 //#include "google/protobuf/empty.proto"
 
 using grpc::Channel;
