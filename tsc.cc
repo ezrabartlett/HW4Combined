@@ -178,9 +178,10 @@ IReply Client::processCommand(std::string& input)
     } else if(strncmp(input_copy, "LIST", 4)==0){}
     
     //std::cout << command_reply.grpc_status << "_Status";
-    
-    // Convert to comm iStatus message before returning
-    if(status.status() == "0")
+    if(status.status()==""){
+        connectTo();
+        command_reply.comm_status = FAILURE_UNKNOWN;
+    } else if(status.status() == "0")
         command_reply.comm_status = SUCCESS;
     else if(status.status() == "1")
         command_reply.comm_status = FAILURE_ALREADY_EXISTS;
@@ -197,10 +198,6 @@ IReply Client::processCommand(std::string& input)
     
     
     std::cout << status.status() << "commStatus";
-    
-    if (status.status()==""){
-        std::cout << "NULLLLLL";
-    }
     
     // ------------------------------------------------------------
 	// GUIDE 2:
