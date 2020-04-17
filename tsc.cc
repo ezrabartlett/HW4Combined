@@ -189,7 +189,7 @@ IReply Client::processCommand(std::string& input)
         to_follow.set_username(username);
         to_follow.set_follow("TEST_USERNAME");
         
-        stub_->FOLLOW(&command_context, to_unfollow, &testStatus);
+        stub_->Follow(&command_context, to_unfollow, &testStatus);
         
         int attempts = 0;
         
@@ -197,7 +197,7 @@ IReply Client::processCommand(std::string& input)
             std::cout << "Waiting";
             connectTo();
             std::this_thread::sleep_for (std::chrono::seconds(1));
-            stub_->FOLLOW(&command_context, to_unfollow, &testStatus);
+            stub_->Follow(&command_context, to_unfollow, &testStatus);
             attempts+=1;
         }
         
