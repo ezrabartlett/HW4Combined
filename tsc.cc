@@ -188,18 +188,20 @@ IReply Client::processCommand(std::string& input)
           
         to_follow_test.set_username(username);
         to_follow_test.set_follow("TEST_USERNAME");
+        
         stub_->Follow(&new_context, to_follow_test, &status);
+        
         //stub_->Follow(&command_context, to_follow_test, &testStatus);
         
         //int attempts = 0;
         
-       // while(status.status() == "" && attempts <= 5){
+       while(status.status() == "" && attempts <= 5){
             std::cout << "Waiting";
             connectTo();
             std::this_thread::sleep_for (std::chrono::seconds(1));
-            //stub_->Follow(&command_context, to_follow_test, &testStatus);
-        //    attempts+=1;
-        //}
+            stub_->Follow(&new_context, to_follow_test, &testStatus);
+            attempts+=1;
+        }
         
         if(status.status()== ""){
             std::cout << "Failed to reconnect after 5 attempts.\n";
