@@ -158,14 +158,7 @@ IReply Client::processCommand(std::string& input)
         
         to_follow.set_username(username);
         to_follow.set_follow(target_name);
-        try {
-           command_reply.grpc_status = stub_->Follow(&command_context, to_follow, &status);
-        } catch (const std::exception& e) {
-            std::cout << "FFFFAAAAIIIILLLLLED";
-            //logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-          //return;
-        }
-        std::cout << "follow command" << input_copy;
+        command_reply.grpc_status = stub_->Follow(&command_context, to_follow, &status);
     
     } else if(strncmp(input_copy, "UNFOLLOW", 8)==0){
         const char* target_name = input.substr(9).c_str();
@@ -174,8 +167,6 @@ IReply Client::processCommand(std::string& input)
              
         to_unfollow.set_username(username);
         to_unfollow.set_follow(target_name);
-        
-        std::cout << (char*)"unfollow command";
         
         command_reply.grpc_status = stub_->Unfollow(&command_context, to_unfollow, &status);
     } else if(strncmp(input_copy, "LIST", 4)==0){}
@@ -195,9 +186,10 @@ IReply Client::processCommand(std::string& input)
         
         int attempts = 0;
         
-       while(status.status() == "" && attempts <= 5){
+        // If the connection fails, attempt to recconect
+        while(status.status() == "" && attempts <= 5){
             ClientContext new_context_test;
-            std::cout << "Waiting";
+            displayReconnectionMessage(hostname, port)
             connectTo();
             std::this_thread::sleep_for (std::chrono::seconds(1));
             stub_->Follow(&new_context_test, to_follow_test, &status);
@@ -207,6 +199,9 @@ IReply Client::processCommand(std::string& input)
         if(status.status()== ""){
             std::cout << "Failed to reconnect after 5 attempts.\n";
             command_reply.comm_status = FAILURE_UNKNOWN;
+        }
+        else{
+            std::cout << "Successfully recconnected\n";
         }
     } else if(status.status() == "0")
         command_reply.comm_status = SUCCESS;
