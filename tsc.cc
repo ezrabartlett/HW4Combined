@@ -187,8 +187,8 @@ IReply Client::processCommand(std::string& input)
         tinysns::FollowOp to_follow_test;
           
         to_follow_test.set_username(username);
-        to_follow_test.set_follow("TEST_USERNAME");
-        command_reply.grpc_status = stub_->Follow(&command_context, to_follow, &status);
+        to_follow_test.set_follow("TEST_USERNAME".c_str());
+        command_reply.grpc_status = stub_->Follow(&command_context, to_follow_test, &status);
         //stub_->Follow(&command_context, to_follow_test, &testStatus);
         
         //int attempts = 0;
