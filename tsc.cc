@@ -188,7 +188,7 @@ IReply Client::processCommand(std::string& input)
           
         to_follow_test.set_username(username);
         to_follow_test.set_follow("TEST_USERNAME");
-        command_reply.grpc_status = stub_->Follow(&new_context, to_follow_test, &status);
+        stub_->Follow(&new_context, to_follow_test, &status);
         //stub_->Follow(&command_context, to_follow_test, &testStatus);
         
         //int attempts = 0;
