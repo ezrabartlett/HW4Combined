@@ -196,10 +196,11 @@ IReply Client::processCommand(std::string& input)
         int attempts = 0;
         
        while(status.status() == "" && attempts <= 5){
+            ClientContext new_context_test;
             std::cout << "Waiting";
             connectTo();
             std::this_thread::sleep_for (std::chrono::seconds(1));
-            stub_->Follow(&new_context, to_follow_test, &status);
+            stub_->Follow(&new_context_test, to_follow_test, &status);
             attempts+=1;
         }
         
