@@ -183,12 +183,12 @@ IReply Client::processCommand(std::string& input)
     //std::cout << command_reply.grpc_status << "_Status";
     if(status.status()==""){
         ReplyStatus testStatus;
-        
+        ClientContext new_context;
         tinysns::FollowOp to_follow_test;
           
         to_follow_test.set_username(username);
         to_follow_test.set_follow("TEST_USERNAME");
-        command_reply.grpc_status = stub_->Follow(&command_context, to_follow_test, &status);
+        command_reply.grpc_status = stub_->Follow(&new_context, to_follow_test, &status);
         //stub_->Follow(&command_context, to_follow_test, &testStatus);
         
         //int attempts = 0;
