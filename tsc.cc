@@ -218,9 +218,6 @@ IReply Client::processCommand(std::string& input)
     else
         command_reply.comm_status = SUCCESS;
     
-    
-    std::cout << status.status() << "commStatus";
-    
     // ------------------------------------------------------------
 	// GUIDE 2:
 	// Then, you should create a variable of IReply structure
@@ -300,9 +297,40 @@ void Client::processTimeline()
         ClientContext client_context;
 
         User current_user;
-
+        
+        ReplyStatus status;
+        
         current_user.set_username(username);
-
+        
+        ClientContext new_context_2;
+        
+        tinysns::FollowOp to_follow;
+        
+        stub_->Follow(&new_context_2 , to_follow, &status);
+        
+        if(status.status()==""){
+               ReplyStatus testStatus;
+               ClientContext new_context;
+               tinysns::FollowOp to_follow_test;
+                 
+               to_follow_test.set_username(username);
+               to_follow_test.set_follow("TEST_USERNAME");
+               
+               stub_->Follow(&new_context, to_follow_test, &status);
+               
+               int attempts = 0;
+               
+               // If the connection fails, attempt to recconect
+               while(status.status() == "" && attempts <= 5){
+                   ClientContext new_context_test;
+                   displayReconnectionMessage(hostname, port);
+                   connectTo();
+                   std::this_thread::sleep_for (std::chrono::seconds(1));
+                   stub_->Follow(&new_context_test, to_follow_test, &status);
+                   attempts+=1;
+               }
+        }
+        
         if(checkForInput()) {
            ReplyStatus input_status;
            
