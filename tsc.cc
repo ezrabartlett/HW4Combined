@@ -197,8 +197,8 @@ IReply Client::processCommand(std::string& input)
         }
         
         if(status.status()== ""){
-            std::cout << "Failed to reconnect after 5 attempts.\n";
-            command_reply.comm_status = FAILURE_UNKNOWN;
+            std::cout << "Failed to reconnect after 5 attempts.\n Exiting....\n";'
+            Exit();
         }
         else{
             std::cout << "Successfully recconnected\n";
