@@ -193,7 +193,7 @@ IReply Client::processCommand(std::string& input)
         
         //stub_->Follow(&command_context, to_follow_test, &testStatus);
         
-        //int attempts = 0;
+        int attempts = 0;
         
        while(status.status() == "" && attempts <= 5){
             std::cout << "Waiting";
